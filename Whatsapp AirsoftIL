@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מעבר לוואטסאפ...</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #25D366;
+            color: white;
+            padding: 15px 35px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #1ebd5a;
+        }
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border-left-color: #25D366;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        // הקישור הרשמי והתקני שלך לוואטסאפ
+        var whatsappUrl = "https://wa.me/972542266696?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%9C%D7%92%D7%91%D7%99%20%D7%90%D7%A7%D7%93%D7%97%20%D7%94%D7%90%D7%95%D7%95%D7%99%D7%A8%20%F0%9F%94%AB";
+
+        // ניסיון מעבר אוטומטי ברגע שהדף עולה
+        window.onload = function() {
+            // השהייה קלה כדי שהדף יוצג למשתמש לפני הקפיצה (עוזר לעיתים מול חסימות)
+            setTimeout(function() {
+                window.location.href = whatsappUrl;
+            }, 1000); 
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner"></div>
+        <h2>מעביר אותך לוואטסאפ...</h2>
+        <p>אם לא עברת אוטומטית תוך מספר שניות, לחץ על הכפתור:</p>
+        
+        <a href="https://wa.me/972542266696?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%9C%D7%92%D7%91%D7%99%20%D7%90%D7%A7%D7%93%D7%97%20%D7%94%D7%90%D7%95%D7%95%D7%99%D7%A8%20%F0%9F%94%AB" class="btn">המשך לוואטסאפ</a>
+    </div>
+</body>
+</html>
