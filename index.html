@@ -3,78 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>פותח וואצאפ...</title>
+    
+    <meta http-equiv="refresh" content="1;url=https://wa.me/972542266696?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%9C%D7%92%D7%91%D7%99%20%D7%94%D7%90%D7%A7%D7%93%D7%97%20%D7%90%D7%95%D7%95%D7%99%D7%A8%F0%9F%94%AB">
+    
+    <title>מעביר אותך לוואצאפ...</title>
     <style>
-        body { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            background-color: #f0f2f5; 
-            font-family: system-ui, -apple-system, sans-serif; 
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #f0f2f5;
+            text-align: center;
+        }
+        .loading-text {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
         .whatsapp-btn {
-            background-color: #25D366; 
-            color: white; 
-            padding: 20px 40px; 
-            font-size: 22px; 
-            font-weight: bold; 
-            border-radius: 50px; 
-            text-decoration: none; 
-            text-align: center; 
-            display: inline-block; 
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-            transition: transform 0.2s, background-color 0.2s;
+            background-color: #25D366;
+            color: white;
+            padding: 16px 32px;
+            font-size: 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+            animation: pulse 2s infinite;
         }
         .whatsapp-btn:active {
             background-color: #1DA851;
-            transform: scale(0.95);
         }
+        /* אנימציית פעימה קטנה לכפתור כדי למשוך תשומת לב במידה והאוטומט נחסם */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        /* קישור נסתר לטריקים של עקיפת דפדפן */
+        #hidden-link { display: none; }
     </style>
 </head>
 <body>
 
-    <a href="#" id="waLink" class="whatsapp-btn" target="_blank">לפרטים בוואצאפ לחץ כאן 💬</a>
+    <div class="loading-text">מיד תועבר לוואצאפ ⏳</div>
+    
+    <button class="whatsapp-btn" onclick="openWhatsApp()">אם לא הועברת, לחץ כאן למעבר 💬</button>
+    
+    <a id="hidden-link" target="_top" href="#"></a>
 
     <script>
-        // הגדרת המספר וההודעה המקודדת
-        var phone = "972542266696";
-        var message = encodeURIComponent("היי, אשמח לפרטים לגבי המוצר 🔫");
-        
-        // יצירת שלושת סוגי הקישורים האפשריים
-        // 1. הקישור הרשמי של ה-API (הכי אמין לגיבוי רשת)
-        var waMeUrl = "https://api.whatsapp.com/send?phone=" + phone + "&text=" + message;
-        // 2. קישור ישיר לאפליקציה באייפון
-        var iosUrl = "whatsapp://send?phone=" + phone + "&text=" + message;
-        // 3. קישור Intent אגרסיבי לאנדרואיד שעוקף WebViews
-        var androidIntent = "intent://send?phone=" + phone + "&text=" + message + "#Intent;scheme=whatsapp;package=com.whatsapp;end";
+        var phone = "972542266696"; 
+        var message = "היי, אשמח לפרטים לגבי האקדח אוויר🔫";
+        var encodedMessage = encodeURIComponent(message);
 
-        // מציאת הכפתור שלנו
-        var link = document.getElementById("waLink");
+        var waMeUrl = "https://wa.me/" + phone + "?text=" + encodedMessage;
+        var appSchemeUrl = "whatsapp://send?phone=" + phone + "&text=" + encodedMessage;
+        var intentUrl = "intent://send?phone=" + phone + "&text=" + encodedMessage + "#Intent;scheme=whatsapp;package=com.whatsapp;end";
 
-        // זיהוי מכשיר
-        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-        var isAndroid = /android/i.test(userAgent);
+        // פונקציית המעבר הראשית
+        function openWhatsApp() {
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+            var isAndroid = /android/i.test(userAgent);
 
-        // שלב א': שותלים את הקישור האגרסיבי ביותר ישירות בתוך ה-HTML
-        if (isAndroid) {
-            link.href = androidIntent;
-        } else if (isIOS) {
-            link.href = iosUrl;
-        } else {
-            link.href = waMeUrl;
+            if (isAndroid) {
+                window.location.replace(intentUrl);
+                setTimeout(function() { window.location.replace(waMeUrl); }, 600);
+            } else if (isIOS) {
+                window.location.replace(appSchemeUrl);
+                setTimeout(function() { window.location.replace(waMeUrl); }, 600);
+            } else {
+                window.location.replace(waMeUrl);
+            }
         }
 
-        // שלב ב': מערכת גיבוי כפולה (Fallback)
-        // אם המשתמש לחץ וטיקטוק "בלע" את הפעולה ולא פתח כלום, 
-        // הקוד ימתין 800 מילישניות ואז יפעיל העברה כפויה לקישור הרשת
-        link.addEventListener('click', function(e) {
+        // רשת ביטחון 2: ניסיון לחיצה מזויפת (Simulated Click) שעוקף webviews
+        function fakeClickFallback() {
+            var link = document.getElementById('hidden-link');
+            link.href = waMeUrl;
+            link.click();
+        }
+
+        // --- הפעלה אוטומטית בעת טעינת הדף ---
+        window.onload = function() {
+            // ניסיון ראשון: מיד עם טעינת הדף
             setTimeout(function() {
-                window.location.href = waMeUrl;
-            }, 800);
-        });
+                openWhatsApp();
+            }, 100);
+
+            // ניסיון שני: אם אחרי 1.5 שניות המשתמש עדיין כאן, נפעיל לחיצה מזויפת
+            setTimeout(function() {
+                fakeClickFallback();
+            }, 1500);
+        };
     </script>
 </body>
 </html>
