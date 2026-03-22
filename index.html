@@ -1,152 +1,80 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>מעביר לוואטסאפ...</title>
-
-<script>
-const phone = "972542266696";
-const message = encodeURIComponent("היי, אשמח לפרטים לגבי אקדח האוויר 🔫");
-
-const links = {
-    app: `whatsapp://send?phone=${phone}&text=${message}`,
-    web: `https://wa.me/${phone}?text=${message}`,
-    api: `https://api.whatsapp.com/send?phone=${phone}&text=${message}`
-};
-
-let opened = false;
-
-function tryOpen(url) {
-    if (opened) return;
-    opened = true;
-    window.location.href = url;
-}
-
-function detectDevice() {
-    const ua = navigator.userAgent;
-    return {
-        ios: /iPhone|iPad|iPod/i.test(ua),
-        android: /Android/i.test(ua)
-    };
-}
-
-function openAllMethods() {
-    // ניסיון 1 - פתיחה ישירה
-    tryOpen(links.app);
-
-    // ניסיון 2 - iframe
-    setTimeout(() => {
-        let iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        iframe.src = links.app;
-        document.body.appendChild(iframe);
-    }, 400);
-
-    // ניסיון 3 - API רשמי
-    setTimeout(() => tryOpen(links.api), 1200);
-
-    // ניסיון 4 - wa.me
-    setTimeout(() => tryOpen(links.web), 2000);
-}
-
-function smartOpen() {
-    const device = detectDevice();
-
-    if (device.ios) {
-        tryOpen(links.api);
-    } else if (device.android) {
-        tryOpen(links.app);
-    } else {
-        tryOpen(links.web);
-    }
-}
-
-// ניסיון אוטומטי
-window.onload = () => {
-    setTimeout(openAllMethods, 300);
-};
-
-// לחיצה על המסך (עוקף חסימות טיקטוק)
-document.addEventListener("click", smartOpen);
-
-// כפתור ראשי
-function openWhatsApp() {
-    smartOpen();
-}
-
-// כפתור fallback
-function openWeb() {
-    window.location.href = links.web;
-}
-</script>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 30px;
-    background: linear-gradient(135deg, #020617, #0f172a);
-    color: white;
-}
-
-h1 {
-    font-size: 26px;
-    margin-bottom: 10px;
-}
-
-p {
-    opacity: 0.8;
-}
-
-.btn {
-    display: block;
-    margin: 15px auto;
-    padding: 20px;
-    font-size: 20px;
-    border-radius: 16px;
-    border: none;
-    cursor: pointer;
-    width: 90%;
-    max-width: 340px;
-}
-
-.primary {
-    background: #25D366;
-    color: white;
-    font-weight: bold;
-}
-
-.secondary {
-    background: #334155;
-    color: white;
-}
-
-.note {
-    margin-top: 20px;
-    font-size: 14px;
-    opacity: 0.7;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פותח וואצאפ...</title>
+    <style>
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            background-color: #f0f2f5; 
+            font-family: system-ui, -apple-system, sans-serif; 
+        }
+        .whatsapp-btn {
+            background-color: #25D366; 
+            color: white; 
+            padding: 20px 40px; 
+            font-size: 22px; 
+            font-weight: bold; 
+            border-radius: 50px; 
+            text-decoration: none; 
+            text-align: center; 
+            display: inline-block; 
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .whatsapp-btn:active {
+            background-color: #1DA851;
+            transform: scale(0.95);
+        }
+    </style>
 </head>
-
 <body>
 
-<h1>💬 מעבר לוואטסאפ</h1>
-<p>לחץ על הכפתור למעבר מיידי</p>
+    <a href="#" id="waLink" class="whatsapp-btn" target="_blank">לפרטים בוואצאפ לחץ כאן 💬</a>
 
-<button class="btn primary" onclick="openWhatsApp()">
-👉 פתח וואטסאפ עכשיו
-</button>
+    <script>
+        // הגדרת המספר וההודעה המקודדת
+        var phone = "972542266696";
+        var message = encodeURIComponent("היי, אשמח לפרטים לגבי המוצר 🔫");
+        
+        // יצירת שלושת סוגי הקישורים האפשריים
+        // 1. הקישור הרשמי של ה-API (הכי אמין לגיבוי רשת)
+        var waMeUrl = "https://api.whatsapp.com/send?phone=" + phone + "&text=" + message;
+        // 2. קישור ישיר לאפליקציה באייפון
+        var iosUrl = "whatsapp://send?phone=" + phone + "&text=" + message;
+        // 3. קישור Intent אגרסיבי לאנדרואיד שעוקף WebViews
+        var androidIntent = "intent://send?phone=" + phone + "&text=" + message + "#Intent;scheme=whatsapp;package=com.whatsapp;end";
 
-<button class="btn secondary" onclick="openWeb()">
-🔁 אם לא עבד - לחץ כאן
-</button>
+        // מציאת הכפתור שלנו
+        var link = document.getElementById("waLink");
 
-<div class="note">
-אם זה לא נפתח:<br>
-פתח דרך הדפדפן (⋮ → Open in browser)
-</div>
+        // זיהוי מכשיר
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+        var isAndroid = /android/i.test(userAgent);
 
+        // שלב א': שותלים את הקישור האגרסיבי ביותר ישירות בתוך ה-HTML
+        if (isAndroid) {
+            link.href = androidIntent;
+        } else if (isIOS) {
+            link.href = iosUrl;
+        } else {
+            link.href = waMeUrl;
+        }
+
+        // שלב ב': מערכת גיבוי כפולה (Fallback)
+        // אם המשתמש לחץ וטיקטוק "בלע" את הפעולה ולא פתח כלום, 
+        // הקוד ימתין 800 מילישניות ואז יפעיל העברה כפויה לקישור הרשת
+        link.addEventListener('click', function(e) {
+            setTimeout(function() {
+                window.location.href = waMeUrl;
+            }, 800);
+        });
+    </script>
 </body>
 </html>
