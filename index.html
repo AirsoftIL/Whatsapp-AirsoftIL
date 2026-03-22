@@ -1,75 +1,152 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html lang="he">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מעבר לוואטסאפ...</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f0f2f5;
-            margin: 0;
-            color: #333;
-        }
-        .container {
-            text-align: center;
-            padding: 20px;
-        }
-        .btn {
-            display: inline-block;
-            background-color: #25D366;
-            color: white;
-            padding: 15px 35px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 20px;
-            font-weight: bold;
-            margin-top: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background-color 0.3s;
-        }
-        .btn:hover {
-            background-color: #1ebd5a;
-        }
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border-left-color: #25D366;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-    <script>
-        // הקישור הרשמי והתקני שלך לוואטסאפ
-        var whatsappUrl = "https://wa.me/972542266696?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%9C%D7%92%D7%91%D7%99%20%D7%90%D7%A7%D7%93%D7%97%20%D7%94%D7%90%D7%95%D7%95%D7%99%D7%A8%20%F0%9F%94%AB";
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מעביר לוואטסאפ...</title>
 
-        // ניסיון מעבר אוטומטי ברגע שהדף עולה
-        window.onload = function() {
-            // השהייה קלה כדי שהדף יוצג למשתמש לפני הקפיצה (עוזר לעיתים מול חסימות)
-            setTimeout(function() {
-                window.location.href = whatsappUrl;
-            }, 1000); 
-        };
-    </script>
+<script>
+const phone = "972542266696";
+const message = encodeURIComponent("היי, אשמח לפרטים לגבי אקדח האוויר 🔫");
+
+const links = {
+    app: `whatsapp://send?phone=${phone}&text=${message}`,
+    web: `https://wa.me/${phone}?text=${message}`,
+    api: `https://api.whatsapp.com/send?phone=${phone}&text=${message}`
+};
+
+let opened = false;
+
+function tryOpen(url) {
+    if (opened) return;
+    opened = true;
+    window.location.href = url;
+}
+
+function detectDevice() {
+    const ua = navigator.userAgent;
+    return {
+        ios: /iPhone|iPad|iPod/i.test(ua),
+        android: /Android/i.test(ua)
+    };
+}
+
+function openAllMethods() {
+    // ניסיון 1 - פתיחה ישירה
+    tryOpen(links.app);
+
+    // ניסיון 2 - iframe
+    setTimeout(() => {
+        let iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = links.app;
+        document.body.appendChild(iframe);
+    }, 400);
+
+    // ניסיון 3 - API רשמי
+    setTimeout(() => tryOpen(links.api), 1200);
+
+    // ניסיון 4 - wa.me
+    setTimeout(() => tryOpen(links.web), 2000);
+}
+
+function smartOpen() {
+    const device = detectDevice();
+
+    if (device.ios) {
+        tryOpen(links.api);
+    } else if (device.android) {
+        tryOpen(links.app);
+    } else {
+        tryOpen(links.web);
+    }
+}
+
+// ניסיון אוטומטי
+window.onload = () => {
+    setTimeout(openAllMethods, 300);
+};
+
+// לחיצה על המסך (עוקף חסימות טיקטוק)
+document.addEventListener("click", smartOpen);
+
+// כפתור ראשי
+function openWhatsApp() {
+    smartOpen();
+}
+
+// כפתור fallback
+function openWeb() {
+    window.location.href = links.web;
+}
+</script>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 30px;
+    background: linear-gradient(135deg, #020617, #0f172a);
+    color: white;
+}
+
+h1 {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+p {
+    opacity: 0.8;
+}
+
+.btn {
+    display: block;
+    margin: 15px auto;
+    padding: 20px;
+    font-size: 20px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    width: 90%;
+    max-width: 340px;
+}
+
+.primary {
+    background: #25D366;
+    color: white;
+    font-weight: bold;
+}
+
+.secondary {
+    background: #334155;
+    color: white;
+}
+
+.note {
+    margin-top: 20px;
+    font-size: 14px;
+    opacity: 0.7;
+}
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="spinner"></div>
-        <h2>מעביר אותך לוואטסאפ...</h2>
-        <p>אם לא עברת אוטומטית תוך מספר שניות, לחץ על הכפתור:</p>
-        
-        <a href="https://wa.me/972542266696?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%9C%D7%92%D7%91%D7%99%20%D7%90%D7%A7%D7%93%D7%97%20%D7%94%D7%90%D7%95%D7%95%D7%99%D7%A8%20%F0%9F%94%AB" class="btn">המשך לוואטסאפ</a>
-    </div>
+
+<h1>💬 מעבר לוואטסאפ</h1>
+<p>לחץ על הכפתור למעבר מיידי</p>
+
+<button class="btn primary" onclick="openWhatsApp()">
+👉 פתח וואטסאפ עכשיו
+</button>
+
+<button class="btn secondary" onclick="openWeb()">
+🔁 אם לא עבד - לחץ כאן
+</button>
+
+<div class="note">
+אם זה לא נפתח:<br>
+פתח דרך הדפדפן (⋮ → Open in browser)
+</div>
+
 </body>
 </html>
